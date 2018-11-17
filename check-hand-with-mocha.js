@@ -9,6 +9,8 @@ function checkHand(hand) {
         return 'three of a kind';
     } else if (isQuadruple(hand)) {
         return 'four of a kind';
+    } else if (isFlush(hand)) {
+        return 'flush';
     } else {
         return 'high card'
     }
@@ -29,6 +31,26 @@ function isQuadruple(hand) {
 function multiplesIn(hand) {
     return highestCount(valuesFromHand(hand));
 };
+
+function isFlush(hand) {
+    return allTheSameSuit(suitsFor(hand));
+};
+
+function allTheSameSuit(suits) {
+    suits.forEach(function (suit) {
+        if (suit !== suits[0]) {
+            return false;
+        }
+    })
+    return true;
+};
+
+function suitsFor(hand){
+    return hand.map(function(card){
+        return card.split('-')[1];
+    })
+};
+
 
 function highestCount(values) {
     let counts = {};
@@ -93,6 +115,13 @@ describe('isPair()', function () {
     });
 });
 
+describe('allTheSameSuit()', function () {
+    it('reports true if elements are all the same', function () {
+        let result = allTheSameSuit(['D', 'D', 'D', 'D', 'D']);
+        wish(result);
+    });
+});
+
 describe('checkHand()', function () {
     it('handles pairs', function () {
         let result = checkHand(['2-H', '3-C', '4-D', '5-H', '2-C']);
@@ -117,8 +146,8 @@ describe('checkHand()', function () {
         wish(result === 'high card');
     });
 
-    it('handles a flush', function(){
-        let result = checkHand(['2-H', '3-H', '4-H', '5-H', '2-H']);
+    it('handles a flush', function () {
+        let result = checkHand(['2-H', '3-H', '4-H', '5-H', '9-H']);
         wish(result === 'flush');
     });
 });
